@@ -6,9 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class User extends Model
+class UserSession extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'user_sessions';
 
     /**
      * The attributes that are mass assignable.
@@ -17,11 +24,8 @@ class User extends Model
      */
     protected $fillable = [
         'reference',
-        'name',
-        'avatar',
-        'email',
-        'role',
-        'active',
+        'user_reference',
+        'refresh_token',
     ];
 
     /**
@@ -31,6 +35,7 @@ class User extends Model
      */
     protected $hidden = [
         'id',
+        'refresh_token',
     ];
 
     /**
@@ -39,7 +44,6 @@ class User extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -59,35 +63,10 @@ class User extends Model
     }
 
     /**
-     * Get the user authentication record
+     * Get the user that owns the session
      */
-    public function userAuth()
+    public function user()
     {
-        return $this->hasOne(UserAuth::class, 'user_reference', 'reference');
-    }
-
-    /**
-     * Get all sessions for the user
-     */
-    public function sessions()
-    {
-        return $this->hasMany(UserSession::class, 'user_reference', 'reference');
-    }
-
-    /**
-     * Get all user plans
-     */
-    public function userPlans()
-    {
-        return $this->hasMany(UserPlan::class, 'user_reference', 'reference');
-    }
-
-    /**
-     * Get the active plan for the user
-     */
-    public function activePlan()
-    {
-        return $this->hasOne(UserPlan::class, 'user_reference', 'reference')
-                    ->where('active', true);
+        return $this->belongsTo(User::class, 'user_reference', 'reference');
     }
 }

@@ -6,9 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class User extends Model
+class UserPlan extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'user_plans';
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +24,10 @@ class User extends Model
      */
     protected $fillable = [
         'reference',
-        'name',
-        'avatar',
-        'email',
-        'role',
+        'user_reference',
+        'plan_reference',
+        'expires_in',
+        'meta_data',
         'active',
     ];
 
@@ -39,6 +46,8 @@ class User extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'expires_in' => 'datetime',
+        'meta_data' => 'array',
         'active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -59,35 +68,18 @@ class User extends Model
     }
 
     /**
-     * Get the user authentication record
+     * Get the user that owns the plan
      */
-    public function userAuth()
+    public function user()
     {
-        return $this->hasOne(UserAuth::class, 'user_reference', 'reference');
+        return $this->belongsTo(User::class, 'user_reference', 'reference');
     }
 
     /**
-     * Get all sessions for the user
+     * Get the plan details
      */
-    public function sessions()
+    public function plan()
     {
-        return $this->hasMany(UserSession::class, 'user_reference', 'reference');
-    }
-
-    /**
-     * Get all user plans
-     */
-    public function userPlans()
-    {
-        return $this->hasMany(UserPlan::class, 'user_reference', 'reference');
-    }
-
-    /**
-     * Get the active plan for the user
-     */
-    public function activePlan()
-    {
-        return $this->hasOne(UserPlan::class, 'user_reference', 'reference')
-                    ->where('active', true);
+        return $this->belongsTo(Plan::class, 'plan_reference', 'reference');
     }
 }
