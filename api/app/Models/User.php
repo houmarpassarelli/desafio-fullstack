@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class User extends Model
+use App\Models\BaseModel;
+
+class User extends BaseModel
 {
     use HasFactory;
 
@@ -22,15 +23,6 @@ class User extends Model
         'email',
         'role',
         'active',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'id',
     ];
 
     /**

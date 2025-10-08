@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class UserPlan extends Model
+use App\Models\BaseModel;
+
+class UserPlan extends BaseModel
 {
     use HasFactory;
 
@@ -29,15 +30,6 @@ class UserPlan extends Model
         'expires_in',
         'meta_data',
         'active',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'id',
     ];
 
     /**
