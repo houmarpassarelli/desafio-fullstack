@@ -7,12 +7,17 @@ use App\Models\Plan;
 class PlanController extends Controller
 {
     /**
-     * Display a listing of the plans.
+     * Display a listing of all plans.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        return Plan::all();
+        $plans = Plan::all();
+
+        return response()->json([
+            'data' => $plans,
+            'total' => $plans->count()
+        ]);
     }
 }

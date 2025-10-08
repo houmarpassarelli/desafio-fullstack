@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
 
     /**
-     * Display the resource.
+     * Display the specified user with active plan.
      *
-     * @return \Illuminate\Http\Response
+     * @param string $id (User reference UUID)
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show()
+    public function show($id)
     {
-        return User::find(1);
+        // Busca usuário por reference (UUID) e carrega plano ativo com detalhes do plano
+        $user = User::where('reference', $id)
+                    ->with(['activePlan.plan']) // Eager load: UserPlan ativo + Plan relacionado
+                    ->firstOrFail(); // 404 se não encontrar
+
+        return response()->json($user);
     }
 }

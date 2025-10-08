@@ -23,6 +23,6 @@ Route::get('/', function () {
     return response()->json(['message' => 'ok']);
 });
 
-Route::apiResource('plans', PlanController::class, ['only' => 'index']);
+Route::get('/plans', [PlanController::class, 'index']);
 
-Route::apiSingleton('user', UserController::class, ['only' => 'show']);
+Route::get('/users/{id}', [UserController::class, 'show']);
