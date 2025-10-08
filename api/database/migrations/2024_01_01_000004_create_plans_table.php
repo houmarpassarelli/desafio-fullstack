@@ -28,13 +28,6 @@ return new class extends Migration
             // Indexes
             $table->index('reference');
             $table->index('original_plan');
-
-            // Foreign Key to self (for annual plan referencing monthly plan)
-            $table->foreign('original_plan')
-                  ->references('reference')
-                  ->on('plans')
-                  ->onDelete('set null')
-                  ->onUpdate('cascade');
         });
     }
 
