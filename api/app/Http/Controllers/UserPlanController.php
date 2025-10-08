@@ -17,7 +17,7 @@ class UserPlanController extends Controller
     {
         // Busca todos os UserPlans do usuário por user_reference
         $userPlans = UserPlan::where('user_reference', $id)
-                             ->with('plan') // Eager load Plan relacionado (evita N+1)
+                             ->with(['plan', 'usage']) // Eager load Plan e Usage relacionados (evita N+1)
                              ->orderBy('created_at', 'desc') // Mais recente primeiro
                              ->get();
 

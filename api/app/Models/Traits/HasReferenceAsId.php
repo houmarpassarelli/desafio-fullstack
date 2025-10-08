@@ -4,13 +4,13 @@ namespace App\Models\Traits;
 
 trait HasReferenceAsId
 {
-    // Hide real fields
+    // Esconde 'reference' e 'id' reais
     protected $hidden = ['reference', 'id'];
 
-    // Add virtual field
+    // Adiciona campo virtual
     protected $appends = ['id'];
 
-    // Replaces 'id' with 'reference' in responses
+    // Substitui 'id' com 'reference' nas respostas JSON
     public function getIdAttribute()
     {
         return $this->attributes['reference'] ?? null;

@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 use App\Models\BaseModel;
 
-class UserPlan extends BaseModel
+class UserPlanUsage extends BaseModel
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class UserPlan extends BaseModel
      *
      * @var string
      */
-    protected $table = 'user_plans';
+    protected $table = 'user_plan_usages';
 
     /**
      * The attributes that are mass assignable.
@@ -25,11 +25,9 @@ class UserPlan extends BaseModel
      */
     protected $fillable = [
         'reference',
-        'user_reference',
-        'plan_reference',
-        'expires_in',
-        'meta_data',
-        'active',
+        'user_plan_reference',
+        'lot_used',
+        'storage_used',
     ];
 
     /**
@@ -38,9 +36,8 @@ class UserPlan extends BaseModel
      * @var array<string, string>
      */
     protected $casts = [
-        'expires_in' => 'datetime',
-        'meta_data' => 'array',
-        'active' => 'boolean',
+        'lot_used' => 'integer',
+        'storage_used' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -60,26 +57,10 @@ class UserPlan extends BaseModel
     }
 
     /**
-     * Get the user that owns the plan
+     * Get the user plan that this usage belongs to
      */
-    public function user()
+    public function userPlan()
     {
-        return $this->belongsTo(User::class, 'user_reference', 'reference');
-    }
-
-    /**
-     * Get the plan details
-     */
-    public function plan()
-    {
-        return $this->belongsTo(Plan::class, 'plan_reference', 'reference');
-    }
-
-    /**
-     * Get the usage statistics for this plan
-     */
-    public function usage()
-    {
-        return $this->hasOne(UserPlanUsage::class, 'user_plan_reference', 'reference');
+        return $this->belongsTo(UserPlan::class, 'user_plan_reference', 'reference');
     }
 }
