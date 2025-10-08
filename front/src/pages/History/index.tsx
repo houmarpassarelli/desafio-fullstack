@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/Layout/pageheader";
 import { IconHistory, IconCreditCardFilled, IconArrowsExchange } from '@tabler/icons-react';
 import { Modal } from '@/components/Modal';
-import { useState } from 'react';
+import { useModal } from '@/hooks/useModal';
 
 interface HistoryItem {
     id: number;
@@ -13,8 +13,7 @@ interface HistoryItem {
 }
 
 export const History = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<HistoryItem | null>(null);
+    const { isOpen, data: selectedItem, openModal, closeModal } = useModal<HistoryItem>();
 
     const historyData: HistoryItem[] = [
         {
@@ -34,16 +33,6 @@ export const History = () => {
             type: 'payment'
         }
     ];
-
-    const handleOpenModal = (item: HistoryItem) => {
-        setSelectedItem(item);
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedItem(null);
-    };
 
     return (<div className="py-6">
         <PageHeader 
@@ -72,7 +61,7 @@ export const History = () => {
                             </p>
                         </div>
                         <button
-                            onClick={() => handleOpenModal(item)}
+                            onClick={() => openModal(item)}
                             className="px-4 py-2 text-sm text-orange-600 rounded hover:bg-orange-600 hover:text-white transition-colors"
                         >
                             Ver detalhes
@@ -83,14 +72,14 @@ export const History = () => {
         </main>
 
         <Modal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
+            isOpen={isOpen}
+            onClose={closeModal}
             title={selectedItem?.title}
             size="md"
             footer={
                 <>
                     <button
-                        onClick={handleCloseModal}
+                        onClick={closeModal}
                         className="w-full px-5 py-3 text-sm font-medium leading-5 text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 sm:px-4 sm:py-2 sm:w-auto hover:border-gray-500 focus:outline-none"
                     >
                         Fechar
