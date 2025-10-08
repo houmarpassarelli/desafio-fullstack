@@ -1,5 +1,5 @@
 import { PageHeader } from "@/components/Layout/pageheader";
-import { IconCreditCardFilled } from '@tabler/icons-react';
+import { IconLibraryFilled } from '@tabler/icons-react';
 
 export const Plans = () => {
   const plans = [
@@ -49,7 +49,7 @@ export const Plans = () => {
     <div className="py-6">
         <PageHeader 
             title="Planos de Assinatura" 
-            icon={IconCreditCardFilled}
+            icon={IconLibraryFilled}
             breadcrumbs={[
                 { label: "Início", path: "/" },
                 { label: "Planos de Assinatura" }
