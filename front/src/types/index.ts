@@ -35,6 +35,7 @@ export interface UserPlan {
   expires_in?: string;
   meta_data?: any;
   active: boolean;
+  exchange_type?: string;
   created_at: string;
   updated_at: string;
   plan?: Plan;

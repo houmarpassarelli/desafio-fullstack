@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { PublicRoute } from './components/PublicRoute'
+import { LogoutHandler } from './components/LogoutHandler'
 import { Dashboard, Plans, History, Subscription, Login } from './pages'
 
 export function Router() {
@@ -28,6 +29,7 @@ export function Router() {
                 <Route path="planos" element={<Plans />} />
                 <Route path="historico" element={<History />} />
                 <Route path="assinatura" element={<Subscription />} />
+                <Route path="logout" element={<LogoutHandler />} />
               </Routes>
             </Layout>
           </ProtectedRoute>

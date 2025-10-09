@@ -30,6 +30,7 @@ class UserPlan extends BaseModel
         'expires_in',
         'meta_data',
         'active',
+        'exchange_type',
     ];
 
     /**

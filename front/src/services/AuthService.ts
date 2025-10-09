@@ -1,4 +1,5 @@
 import { HttpClient, TokenManager } from '../lib';
+import { UserService } from './UserService';
 import type { User, ApiResponse } from '../types';
 
 interface LoginRequest {
@@ -16,6 +17,12 @@ interface LoginResponse {
 
 
 export class AuthService extends HttpClient {
+  private userService: UserService;
+
+  constructor() {
+    super();
+    this.userService = new UserService();
+  }
   /**
    * Realiza login do usuário
    */
@@ -26,6 +33,19 @@ export class AuthService extends HttpClient {
     const data = response.data.data;
     TokenManager.saveAccessToken(data.access_token);
     TokenManager.saveRefreshToken(data.refresh_token);
+
+    // Buscar dados completos do usuário e salvar no localStorage
+    try {
+      const fullUserData = await this.userService.getUser(data.user.reference);
+
+      // Se o usuário tem um plano ativo, salvar também no localStorage
+      const activePlan = fullUserData.activePlan;
+      this.userService.saveUserProfile(fullUserData, undefined, activePlan);
+    } catch (error) {
+      console.warn('Erro ao buscar dados completos do usuário:', error);
+      // Se falhar, salva apenas os dados básicos retornados pelo login
+      this.userService.saveUserProfile(data.user);
+    }
 
     return data;
   }
@@ -107,5 +127,6 @@ export class AuthService extends HttpClient {
    */
   clearAuth(): void {
     TokenManager.clearAllAuth();
+    this.userService.clearUserProfile();
   }
 }

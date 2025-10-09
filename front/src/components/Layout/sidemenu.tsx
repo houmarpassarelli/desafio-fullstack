@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { IconLibraryFilled, IconHistory, IconHomeFilled, IconCreditCardFilled } from '@tabler/icons-react';
+import { IconLibraryFilled, IconHistory, IconHomeFilled, IconCreditCardFilled, IconLogout2 } from '@tabler/icons-react';
 
 export const SideMenu = () => {
   const location = useLocation()
@@ -61,6 +61,15 @@ export const SideMenu = () => {
               >
                 <IconHistory size={20} className="text-gray-600 dark:text-gray-400" />
                 <span className="ml-4">Histórico</span>
+              </Link>
+            </li>
+            <li className="relative px-6 py-3">
+              <Link
+                className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                to="/logout"
+              >
+                <IconLogout2 size={20} className="text-gray-600 dark:text-gray-400" />
+                <span className="ml-4">Sair</span>
               </Link>
             </li>
           </ul>

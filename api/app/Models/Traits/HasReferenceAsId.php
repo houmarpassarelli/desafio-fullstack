@@ -10,8 +10,8 @@ trait HasReferenceAsId
      */
     public function initializeHasReferenceAsId()
     {
-        // Esconde 'reference' e 'id' reais
-        $this->hidden = array_merge($this->hidden ?? [], ['reference', 'id']);
+        // Esconde 'reference' real (mas mantém 'id' para ser sobrescrito)
+        $this->hidden = array_merge($this->hidden ?? [], ['reference']);
 
         // Adiciona campo virtual 'id'
         $this->appends = array_merge($this->appends ?? [], ['id']);

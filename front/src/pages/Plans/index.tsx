@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { PageHeader } from "@/components/Layout/pageheader";
 import { IconLibraryFilled } from '@tabler/icons-react';
 import { PlanService } from '../../services/PlanService';
+import { UserService } from '../../services/UserService';
+import { useAuth } from '../../hooks/useAuth';
 import type { Plan } from '../../types';
 import { formatPrice } from '@/lib';
 
@@ -10,6 +12,47 @@ export const Plans = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'monthly' | 'yearly'>('monthly');
+  const [contractingPlan, setContractingPlan] = useState<string | null>(null);
+
+  const { user, refreshUser } = useAuth();
+
+  // Recuperar plano ativo do localStorage
+  const userService = new UserService();
+  const activePlan = userService.getActivePlan();
+
+  // Função para validar se é um UUID válido
+  const isValidUUID = (str: string): boolean => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(str);
+  };
+
+  // Função auxiliar para obter identificador do plano de forma segura
+  const getPlanIdentifier = (plan: Plan): string | null => {
+    // A API sempre retorna 'id' que é na verdade o 'reference' (devido à trait HasReferenceAsId)
+    if (plan.id && isValidUUID(plan.id.toString())) {
+      return plan.id.toString();
+    }
+    // Fallback para 'reference' caso não tenha 'id'
+    if (plan.reference && isValidUUID(plan.reference)) {
+      return plan.reference;
+    }
+    // Retorna null se não houver UUID válido
+    return null;
+  };
+
+  // Função para verificar se um plano está sendo contratado
+  const isContractingPlan = (plan: Plan): boolean => {
+    if (!contractingPlan) return false;
+    const planId = getPlanIdentifier(plan);
+    return planId !== null && contractingPlan === planId;
+  };
+
+  // Função para verificar se um plano é o plano ativo do usuário
+  const isCurrentActivePlan = (plan: Plan): boolean => {
+    if (!activePlan) return false;
+    const planId = getPlanIdentifier(plan);
+    return planId !== null && activePlan.plan_reference === planId;
+  };
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -18,6 +61,19 @@ export const Plans = () => {
         setError(null);
         const planService = new PlanService();
         const plansData = await planService.getPlans();
+
+        // Log estrutura de cada plano
+        plansData.forEach((plan, index) => {
+          console.log(`Plan ${index + 1}:`, {
+            id: plan.id,
+            reference: plan.reference,
+            label: plan.label,
+            type: plan.type,
+            hasValidId: plan.id ? isValidUUID(plan.id.toString()) : false,
+            hasValidRef: plan.reference ? isValidUUID(plan.reference) : false
+          });
+        });
+
         setPlans(plansData);
       } catch (err) {
         setError('Erro ao carregar planos. Tente novamente mais tarde.');
@@ -32,6 +88,78 @@ export const Plans = () => {
 
   // Filtrar planos baseado na tab ativa
   const filteredPlans = plans.filter(plan => plan.type === activeTab);
+
+  // Função para contratar um plano
+  const handleContractPlan = async (plan: Plan) => {
+    console.log('=== Contract Plan Debug ===');
+    console.log('Plan data:', plan);
+    console.log('Plan.id:', plan.id, 'Type:', typeof plan.id);
+    console.log('Plan.reference:', plan.reference, 'Type:', typeof plan.reference);
+
+    const planIdentifier = getPlanIdentifier(plan);
+    console.log('Plan identifier to send:', planIdentifier);
+    console.log('Plan identifier type:', typeof planIdentifier);
+    console.log('Is valid UUID?', planIdentifier ? isValidUUID(planIdentifier) : false);
+
+    if (!planIdentifier) {
+      alert('Erro: Plano não possui identificador válido (UUID). Dados inconsistentes na API.');
+      console.error('Plan without valid UUID:', plan);
+      return;
+    }
+
+    if (!user) {
+      alert('Você precisa estar logado para contratar um plano');
+      return;
+    }
+
+    setContractingPlan(planIdentifier);
+
+    try {
+      const planService = new PlanService();
+      const userService = new UserService();
+
+      // Determinar tipo de operação baseado se usuário já tem plano ativo
+      const exchangeType = activePlan ? 'change' : 'contract';
+
+      // Contratar o plano
+      const contractedPlan = await planService.contractPlan(planIdentifier, exchangeType);
+
+      // Salvar dados do plano contratado no localStorage
+      userService.saveActivePlan(contractedPlan);
+
+      // Atualizar dados do usuário no localStorage
+      if (user.reference) {
+        const updatedUser = await userService.getUser(user.reference);
+        userService.saveUserProfile(updatedUser, undefined, contractedPlan);
+
+        // Atualizar estado global do usuário
+        await refreshUser();
+      }
+
+      alert(`Plano ${plan.label} contratado com sucesso!`);
+
+    } catch (error: any) {
+      console.error('Erro ao contratar plano:', error);
+      const errorMessage = error?.response?.data?.message || 'Erro ao contratar plano. Tente novamente.';
+      alert(errorMessage);
+    } finally {
+      setContractingPlan(null);
+    }
+  };
+
+  // Componente de label "Atual" triangular
+  const CurrentPlanLabel = () => (
+    <div className="absolute top-0 right-0 z-10">
+      <div className="relative">
+        {/* Triângulo verde */}
+        <div className="w-0 h-0 border-l-[50px] border-l-transparent border-t-[50px] border-t-green-500 border-r-[50px] border-r-green-500"></div>
+        {/* Texto "ATUAL" */}
+        <span className="absolute top-2 right-2 text-white text-xs font-bold transform rotate-45 origin-center">
+          ATUAL
+        </span>
+      </div>
+    </div>
+  );
 
   // Componente de Tabs
   const TabsComponent = () => (
@@ -148,8 +276,11 @@ export const Plans = () => {
             {filteredPlans.map((plan, index) => (
             <div
             key={`${plan.label}-${plan.type}-${index}`}
-            className="min-w-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-hidden"
+            className="min-w-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-hidden relative"
             >
+            {/* Label "Atual" para plano ativo */}
+            {isCurrentActivePlan(plan) && <CurrentPlanLabel />}
+
             <div className="bg-orange-500 text-white p-4">
                 <h4 className="font-semibold text-lg">
                 Plano {plan.label}
@@ -172,13 +303,42 @@ export const Plans = () => {
                     Armazenamento:
                 </p>
                 <p className="text-2xl font-bold text-gray-700 dark:text-gray-200">
-                    {plan.storage} GB
+                    {(plan.storage / 1000)} GB
                 </p>
                 </div>
                 <div>
-                <button className="mt-4 w-full px-4 py-2 bg-gray-800 text-orange-600 rounded hover:bg-orange-600 hover:text-white transition-colors">
-                    Contratar Plano
-                </button>
+                {(() => {
+                  const planId = getPlanIdentifier(plan);
+                  const isContractingThisPlan = isContractingPlan(plan);
+                  const hasValidId = planId !== null;
+                  const isCurrentPlan = isCurrentActivePlan(plan);
+
+                  // Se for o plano atual, não mostrar botão
+                  if (isCurrentPlan) {
+                    return null;
+                  }
+
+                  return (
+                    <button
+                      onClick={() => handleContractPlan(plan)}
+                      disabled={isContractingThisPlan || !hasValidId}
+                      className={`mt-4 w-full px-4 py-2 rounded transition-colors ${
+                        isContractingThisPlan
+                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                          : !hasValidId
+                          ? 'bg-red-400 text-white cursor-not-allowed'
+                          : 'bg-gray-800 text-orange-600 hover:bg-orange-600 hover:text-white'
+                      }`}
+                    >
+                      {isContractingThisPlan
+                        ? 'Contratando...'
+                        : !hasValidId
+                        ? 'Dados Inválidos'
+                        : activePlan ? 'Trocar Plano' : 'Contratar Plano'
+                      }
+                    </button>
+                  );
+                })()}
                 </div>
             </div>
             </div>

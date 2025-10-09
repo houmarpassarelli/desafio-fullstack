@@ -43,4 +43,5 @@ Route::get('/plans', [PlanController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::get('/users/plans/history/{id}', [UserPlanController::class, 'history']);
+    Route::post('/plans/contract', [PlanController::class, 'contract']);
 });

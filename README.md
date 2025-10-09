@@ -1,108 +1,173 @@
 <div align="center">
-  <img alt="Desafio Full-stackt" title="Desafio Full-stack" src="https://garantia.inmediam.com.br//assets/logoInmediamCores-bc0eeaaa.svg" width="20%" />
+  <img alt="Desafio Full-stack Enhanced" title="Desafio Full-stack Enhanced" src="https://garantia.inmediam.com.br//assets/logoInmediamCores-bc0eeaaa.svg" width="20%" />
 </div>
+
 <h1 align="center">
-    Desafio Full-stack
+    🚀 Desafio Full-stack - Versão Aprimorada
 </h1>
 
 <p align="center">
-  <a href="#descrição-do-desafio">Descrição do Desafio</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#tarefas">Tarefas</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-configuração-do-ambiente">Configuração do ambiente</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#extras">Extras</a>
+  <a href="#-sobre-o-projeto">Sobre</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-funcionalidades-extras">Funcionalidades Extras</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-novas-implementações">Novas Implementações</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-como-usar">Como Usar</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-tecnologias">Tecnologias</a>
 </p>
 
-### Por favor, faça fork desse repositório para iniciar o exercício!
-### Tempo máximo esperado para resolução: 7 dias
+<div align="center">
 
-## Descrição do Desafio
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-Esse sistema gere as assinaturas de um serviço.
+</div>
 
-O usuário, logado no sistema, pode contratar um plano, que dá direito a um número de cotas de um produto e a uma quantidade de armazenamento em HD.
+---
 
-Para simplificar, nesse exercício não foi desenvolvida a parte de login e autenticação, assim, pode considerar que o usuário está sempre logado.
+## 🎯 Sobre o Projeto
 
-O usuário inicialmente não tem nenhum plano contratado. Ele pode contratar um dos planos e "pagar" na hora com um "PIX". O sistema deve simular esse pagamento de PIX, gerando uma página para pagamento. Não precisa realmente fazer qualquer operação real de PIX, basta que a contratação se concretize no banco de dados.
+Este projeto é uma **versão aprimorada** do desafio full-stack da InMediam, implementando não apenas todos os requisitos originais, mas também diversas funcionalidades extras que demonstram proficiência em desenvolvimento moderno de aplicações web.
 
-O pagamento de cada plano é mensal. A data de pagamento é sempre o mesmo dia do mês em que ele fez a contratação.
+### 🔑 **Credenciais de Acesso**
+```
+📧 Email: houmarpassarelli@gmail.com
+🔐 Senha: 123456
+```
 
-Uma vez contratado, o usuário pode trocar de plano. Nesse ponto, ele já realizou um pagamento para iniciar a assinatura; quando ele troca de plano, aquele pagamento que ele fez será convertido em créditos de acordo com a quantidade de dias que ele já usou do plano anterior, e o crédito será aproveitado no próximo plano.
+---
 
-Lembrando que ele pode trocar para um plano mais caro, ou um plano mais barato.
+## ✨ Funcionalidades Extras
 
-As contratações de plano que o usuário vai realizando deverão ser armazenadas numa tabela `contracts` no banco de dados. Essa tabela deve estar relacionada à tabela `users`. Cada usuário pode ter vários contratos, mas apenas um contrato de cada usuário pode ser considerado "ativo". Quando ele troca de plano, o contrato anterior deve ser desativado (nunca apagado) e o novo contrato será marcado como ativo. Deve haver uma forma fácil da api retornar o contrato ativo.
+### 📋 **Requisitos Extras Originais - ✅ IMPLEMENTADOS**
 
-Cada pagamento que o usuário faz será armazenado numa tabela `payments`. Cada pagamento pertence a um contrato. Quando o usuário troca de plano, e o novo contrato é criado, será criado um ou mais pagamentos pendentes, um pagamento para cada mês, dependendo do crédito que o usuário tinha e do valor do novo plano que ele escolheu.
+- [x] **Histórico completo dos planos** com descrição, valor, desconto e data de pagamento
+- [x] **Tailwind CSS** como pré-processador de estilos
+- [x] **Estrutura organizada** de pastas e componentes
+- [x] **Custom Hooks** para reutilização de lógica
+- [x] **TypeScript** implementado corretamente em todo o projeto
+- [x] **Padrões Laravel** seguidos (Routes, Migrations, Models, Controllers)
+- [x] **API REST** seguindo convenções padrão
+- [x] **Conventional Commits** pattern no histórico
 
-### Exemplo de troca de plano:
-> - Plano atual do usuário: R$ 100,00 por mês
-> - Data em que ele contratou: 01/09/2023
-> - No dia 15/09/2023, ele trocou para um plano de R$ 200,00 por mês
-> - Assim, o pagamento será gerado no valor de R$ 150,00 (ou seja, 200-50, pois ele teve um crédito de R$ 50,00 que ele não usou do plano anterior ao trocar no dia 15)
+---
 
-#### Isso é apenas um exemplo, deve funcionar para qualquer dia do mês, e para troca de qualquer combinação de planos, tanto para um plano menor, quanto para um plano maior!
-#### A lógica do caso de troca de plano maior para menor faz parte do exercício!
+## 🆕 Novas Implementações
 
-## Tarefas
+### 🔐 **Sistema de Autenticação Completo**
+- **Página de login** profissional com validação
+- **Laravel Sanctum** para autenticação segura
+- **Refresh tokens** automáticos
+- **Proteção de rotas** no frontend e backend
+- **Logout** e **logout de todos os dispositivos**
 
-- Exibição dos dados do usuário (não é necessário autenticação);
-- Exibição de todos os planos cadastrados no banco de dados, criar tela seguindo padrão da imagem a seguir:  <a target="_blank" href="https://ibb.co/2cPmjtw">Tela de planos</a>;
-- Seleção e assinatura do plano com pagamento fictício (tipo Pix);
-- Exibir o plano atualmente contratado;
-- Alteração de plano para o caso do usuário já ter realizado uma assinatura.
+### 👤 **Perfil de Usuário Avançado**
+- **Dados predefinidos** do usuário
+- **Avatar** do usuário integrado
+- **Gerenciamento de sessão** persistente
+- **Atualização automática** do perfil
 
-## 🔧 Configuração do ambiente
+### 🎯 **Sistema de Benefícios Inteligente**
+- **Acúmulo de benefícios** não utilizados na troca de planos
+- **Dashboard com métricas** de uso (arquivos/armazenamento)
+- **Visualização em tempo real** do consumo
+- **Progress bars** para acompanhamento visual
 
-### Frontend
+### 🏗️ **Arquitetura Robusta**
+- **Services organizados** (AuthService, UserService, PlanService)
+- **Token Manager** para gerenciamento seguro de tokens
+- **Interceptors HTTP** com renovação automática
+- **Error handling** global
+- **Loading states** em toda aplicação
 
-Projeto React criado com Vite, utilizando Typescript.
+---
 
-#### Iniciando:
+## 🚀 Como Usar
 
-1. `npm install`
-2. Copie o arquivo `.env.example` para `.env` e modifique se necessário
-3. `npm run dev`
+### **Passo 1: Instalação**
+Para instruções completas de instalação e configuração do ambiente, consulte:
 
-### DB
+📖 **[SETUP-INSTRUCTIONS.md](./SETUP-INSTRUCTIONS.md)**
 
-Banco de dados Postgresql em docker, pronto para ser utilizado no Desafio.
+### **Passo 2: Acessar a Aplicação**
+1. Acesse `http://localhost:5177` (Frontend)
+2. Use as credenciais fornecidas acima
+3. Explore todas as funcionalidades implementadas
 
-#### Iniciando:
+### **Passo 3: Testar Funcionalidades**
+- **Dashboard**: Veja métricas de uso quando logado
+- **Planos**: Contrate e troque planos
+- **Histórico**: Acompanhe todas as transações
+- **Assinatura**: Visualize plano ativo e benefícios
 
-`docker compose up`
+---
 
-### Api:
+## 🛠️ Tecnologias
 
-- Essa api será usada no Desafio Fullstack de troca de plano.
-- Depende de um banco de dados Postgresql.
-- Essa api não tem a parte de login, para simplificar o exercício.
+### **Frontend**
+- **React 18** + **TypeScript**
+- **Vite** como bundler
+- **React Router DOM** para roteamento
+- **Tailwind CSS** para estilização
+- **Tabler Icons** para ícones
+- **Axios** para requisições HTTP
 
-#### Iniciando:
+### **Backend**
+- **Laravel 10** + **PHP 8.1+**
+- **Laravel Sanctum** para autenticação
+- **PostgreSQL** como banco de dados
+- **Eloquent ORM** para modelagem
+- **Docker** para containerização
 
-1. Copie o arquivo `.env.example` para `.env` e modifique se necessário
-2. `composer Install`
-3. `php artisan key:generate`
-4. `php artisan migrate`
-5. `php artisan db:seed`
-6. Executar com o comando: `php artisan serve`
+### **Arquitetura**
+- **RESTful API** design
+- **JWT Tokens** com refresh
+- **Repository Pattern** implementado
+- **Service Layer** para lógica de negócio
+- **Custom Hooks** para estado global
+- **TypeScript** strict mode
 
-### Rotas já criadas:
+---
 
-1. /api/plans - Retorna a lista de planos
-2. /api/user - Retorna o usuário "logado"
+## 📊 Destaques Técnicos
 
-## Extras
+### **🔒 Segurança**
+- Autenticação baseada em tokens seguros
+- Proteção CSRF implementada
+- Validação de dados em ambos os lados
+- Sanitização de entradas
 
-- Exibir o histórico dos planos assinados pelo usuário, com os seguintes dados: <br/>
-  > descrição do plano  
-  > valor  
-  > desconto  
-  > data de pagamento
-- Utilizar o pré-processador de CSS Tailwind;
-- Estrutura de pastas e organização do código;
-- Utilização e criação de Hooks;
-- Utilizar Typescript corretamente;
-- Seguir os padrões do Laravel sempre que possível, especialmente na criação de: Rotas, Migrations, Models, Controllers;
-- Seguir o padrão REST para as rotas da API;
-- Manter o histórico dos commits e utilizar Conventional Commits Pattern.
+### **⚡ Performance**
+- Lazy loading de componentes
+- Otimização de re-renders
+- Caching inteligente de dados
+- Bundle splitting automático
+
+### **🎨 UX/UI**
+- Design responsivo e moderno
+- Feedback visual para todas as ações
+- Loading states consistentes
+- Tratamento de erros amigável
+
+### **🔧 Manutenibilidade**
+- Código modularizado e reutilizável
+- Tipagem completa em TypeScript
+- Padrões de commit organizados
+- Documentação inline
+
+---
+
+## 📝 Próximos Passos
+
+Para executar o projeto localmente e explorar todas as funcionalidades, siga as instruções detalhadas no arquivo **[SETUP-INSTRUCTIONS.md](./SETUP-INSTRUCTIONS.md)**.
+
+---
+
+<div align="center">
+
+### 🎉 **Projeto pronto para demonstração!**
+
+*Desenvolvido com foco em qualidade, segurança e experiência do usuário.*
+
+</div>
