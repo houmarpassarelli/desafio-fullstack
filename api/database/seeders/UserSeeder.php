@@ -15,9 +15,21 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => 'Usuário da Silva',
-            'email' => 'usuario@silva.com',
-        ]);
+        $users = [
+            [
+                'name' => 'Houmar Passareli',
+                'email' => 'houmarpassarelli@gmail.com',
+                'role' => 'user',
+            ],
+            [
+                'name' => 'Administrador',
+                'email' => 'admin@admin.com',
+                'role' => 'super',
+            ],
+        ];
+
+        foreach ($users as $user) {
+            User::create($user);
+        }
     }
 }
