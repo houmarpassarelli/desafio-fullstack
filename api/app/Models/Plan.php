@@ -27,14 +27,6 @@ class Plan extends BaseModel
         'lot',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'id',
-    ];
 
     /**
      * The attributes that should be cast.
