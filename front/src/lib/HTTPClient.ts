@@ -94,16 +94,16 @@ export abstract class HttpClient {
                 }
                 
                 // Tenta refresh do token
-                const response = await this.instance.post<{ token: string, refreshToken?: string }>('/auth/refresh', refreshPayload);
+                const response = await this.instance.post<{ data: { access_token: string, refresh_token?: string } }>('/auth/refresh', { refresh_token: refreshToken });
                 
                 if (response.status === 200) {
-                    
+
                     // Salvar access token usando TokenManager
-                    TokenManager.saveAccessToken(response.data.token);
-                    
+                    TokenManager.saveAccessToken(response.data.data.access_token);
+
                     // Se recebeu um novo refreshToken, salvar usando TokenManager
-                    if (response.data.refreshToken) {
-                        TokenManager.saveRefreshToken(response.data.refreshToken);
+                    if (response.data.data.refresh_token) {
+                        TokenManager.saveRefreshToken(response.data.data.refresh_token);
                     }
                     
                     // Retry da requisição original

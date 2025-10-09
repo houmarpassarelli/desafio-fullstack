@@ -11,7 +11,7 @@ export const setSessionStorage = <T>(key: string, value: T): void => {
     }
   };
   
-  export const getSessionStorage = <T>(key: string, defaultValue: any): any => {
+  export const getSessionStorage = (key: string, defaultValue: any): any => {
     try {
       const item = sessionStorage.getItem(`@${env.storagePrefix}:${key}`);
       if(item){

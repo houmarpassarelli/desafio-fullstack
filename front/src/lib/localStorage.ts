@@ -11,7 +11,7 @@ export const setLocalStorage = <T>(key: string, value: T): void => {
     }
   };
   
-  export const getLocalStorage = <T>(key: string, defaultValue: any): any => {
+  export const getLocalStorage = (key: string, defaultValue: any): any => {
     try {
       const item = localStorage.getItem(`@${env.storagePrefix}:${key}`);
       if(item){
