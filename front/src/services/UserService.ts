@@ -1,4 +1,4 @@
-import { HttpClient } from '../lib/HTTPClient';
+import { HttpClient } from '../lib';
 import type { User, UserPlan, ApiResponse } from '../types';
 
 export class UserService extends HttpClient {

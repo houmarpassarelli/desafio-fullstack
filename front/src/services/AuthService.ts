@@ -1,5 +1,4 @@
-import { HttpClient } from '../lib/HTTPClient';
-import { TokenManager } from '../lib/tokenManager';
+import { HttpClient, TokenManager } from '../lib';
 import type { User, ApiResponse } from '../types';
 
 interface LoginRequest {
