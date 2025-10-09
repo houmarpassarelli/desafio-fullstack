@@ -14,20 +14,7 @@ export abstract class HttpClient {
      * @param headers - Cabeçalhos HTTP adicionais
      */
     constructor(headers?: Record<string, string>) {
-        // Multiple fallback strategies for environment variables
-        // Priority: import.meta.env -> global constants -> runtime globals
-        // const baseURL = import.meta.env.VITE_API_BASE_URL || 
-        //                (globalThis as any).__VITE_API_BASE_URL__ || 
-        //                (window as any).__VITE_API_BASE_URL__;
-        const baseURL = import.meta.env.VITE_API_BASE_URL || "https://checkin-api-dev-19654804394.us-east1.run.app/v1";
-        if (!baseURL) {
-            console.error('Environment check:', {
-                'import.meta.env.VITE_API_BASE_URL': import.meta.env.VITE_API_BASE_URL,
-                'globalThis.__VITE_API_BASE_URL__': (globalThis as any).__VITE_API_BASE_URL__,
-                'window.__VITE_API_BASE_URL__': (window as any).__VITE_API_BASE_URL__
-            });
-            throw new Error('VITE_API_BASE_URL environment variable is not defined. Please set it in your .env file or Docker build args.');
-        }
+        const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
         this.instance = axios.create({
             baseURL,

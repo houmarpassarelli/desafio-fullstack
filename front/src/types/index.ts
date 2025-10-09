@@ -12,13 +12,13 @@ export interface User {
 }
 
 export interface Plan {
-  id: number;
-  reference: string;
+  id?: number;
+  reference?: string;
   original_plan?: string;
   label: string;
-  price: number;
+  price: string | number;
   type: string;
-  percentage_discount: number;
+  percentage_discount?: number | string | null;
   storage: number;
   lot: number;
   created_at: string;

@@ -1,49 +1,98 @@
+import { useState, useEffect } from 'react';
 import { PageHeader } from "@/components/Layout/pageheader";
 import { IconLibraryFilled } from '@tabler/icons-react';
+import { PlanService } from '../../services/PlanService';
+import type { Plan } from '../../types';
 
 export const Plans = () => {
-  const plans = [
-    {
-      id: 1,
-      price: "87,00",
-      storage: 10,
-      files: 1000,
-      label: "Starter"
-    },
-    {
-      id: 2,
-      price: "197,00",
-      storage: 25,
-      files: 2500,
-      label: "Pro"
-    },
-    {
-      id: 3,
-      price: "347,00",
-      storage: 50,
-        files: 5000,
-        label: "Business"
-    },
-    {
-      id: 4,
-      price: "497,00",
-      storage: 100,
-        files: 10000,
-        label: "Enterprise"
-    },
-    // {
-    //   id: 5,
-    //   price: "797,00",
-    //   storage: 250,
-    //   files: 25000,
-    // },
-    // {
-    //   id: 6,
-    //   price: "1.197,00",
-    //   storage: 500,
-    //     files: 50000,
-    // },
-  ];
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const planService = new PlanService();
+        const plansData = await planService.getPlans();
+        setPlans(plansData);
+      } catch (err) {
+        setError('Erro ao carregar planos. Tente novamente mais tarde.');
+        console.error('Erro ao buscar planos:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  const formatPrice = (priceInCents: string | number): string => {
+    const price = typeof priceInCents === 'string' ? parseInt(priceInCents) : priceInCents;
+    const priceInReais = price / 100; // Converter centavos para reais
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(priceInReais);
+  };
+
+  if (loading) {
+    return (
+      <div className="py-6">
+        <PageHeader
+          title="Planos de Assinatura"
+          icon={IconLibraryFilled}
+          breadcrumbs={[
+            { label: "Início", path: "/" },
+            { label: "Planos de Assinatura" }
+          ]}
+        />
+        <div className="grid gap-6 mb-8 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="min-w-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-hidden animate-pulse"
+            >
+              <div className="bg-gray-300 h-20"></div>
+              <div className="p-4 space-y-4">
+                <div className="h-8 bg-gray-300 rounded"></div>
+                <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-10 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-6">
+        <PageHeader
+          title="Planos de Assinatura"
+          icon={IconLibraryFilled}
+          breadcrumbs={[
+            { label: "Início", path: "/" },
+            { label: "Planos de Assinatura" }
+          ]}
+        />
+        <div className="flex items-center justify-center min-h-64">
+          <div className="text-center">
+            <div className="text-red-500 text-lg mb-2">⚠️</div>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition-colors"
+            >
+              Tentar Novamente
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-6">
@@ -56,9 +105,9 @@ export const Plans = () => {
             ]}
         />
         <div className="grid gap-6 mb-8 md:grid-cols-2 lg:grid-cols-3">
-        {plans.map((plan) => (
+        {plans.map((plan, index) => (
             <div
-            key={plan.id}
+            key={`${plan.label}-${plan.type}-${index}`}
             className="min-w-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-hidden"
             >
             <div className="bg-orange-500 text-white p-4">
@@ -66,13 +115,13 @@ export const Plans = () => {
                 Plano {plan.label}
                 </h4>
                 <p className="text-sm">
-                Até {plan.files} arquivos
+                Até {plan.lot.toLocaleString('pt-BR')} arquivos
                 </p>
             </div>
             <div className="p-4">
                 <div className="mb-4">
                 <p className="text-3xl font-bold text-gray-700 dark:text-gray-200">
-                    R$ {plan.price}
+                    R$ {formatPrice(plan.price)}
                     <span className="text-base font-normal text-gray-600 dark:text-gray-400">
                     /mês
                     </span>
